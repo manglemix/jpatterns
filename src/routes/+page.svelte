@@ -33,6 +33,14 @@
 	let comments: Record<number, CodeComment> = {
 		0: new CodeComment('Most statements must end with a semicolon')
 	};
+
+	function getIndent(line: string) {
+		let i = 0;
+		while (line[i] == ' ') {
+			i += 1;
+		}
+		return " ".repeat(i);
+	}
 </script>
 
 <svelte:head>
@@ -61,7 +69,7 @@
 	<table>
 		{#if !ansPicked || showOriginal}
 			{#each lines as line, i}
-				{#if ansPicked && comments[i]}
+				<!-- {#if ansPicked && comments[i]}
 						{#each comments[i].lines as _}
 						<tr>
 							{#if enableLineNumber}
@@ -70,12 +78,12 @@
 							<td>&#8203;</td>
 						</tr>
 						{/each}
-				{/if}
+				{/if} -->
 				<tr>
 					{#if enableLineNumber}
 						<td class="line-no">{i + 1}</td>
 					{/if}
-					<td>{line}</td>
+					<td><pre>{line}</pre></td>
 				</tr>
 			{/each}
 		{:else}
@@ -86,7 +94,7 @@
 							{#if enableLineNumber}
 							<td class="line-no">&#8203;</td>
 							{/if}
-							<td><span class="comment">// {commentLine}</span></td>
+							<td><pre class="comment">{getIndent(line)}// {commentLine}</pre></td>
 						</tr>
 						{/each}
 				{/if}
@@ -94,7 +102,7 @@
 					{#if enableLineNumber}
 						<td class="line-no">{i + 1}</td>
 					{/if}
-					<td>{line}</td>
+					<td><pre>{line}</pre></td>
 				</tr>
 			{/each}
 		{/if}
@@ -117,7 +125,7 @@
 						} else {
 							streak = 0;
 						}
-					}}>{option.text}</button
+					}}><pre>{option.text}</pre></button
 				>
 			{/if}
 		{/each}
