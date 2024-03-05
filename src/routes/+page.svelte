@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CodeComment, problems as srcProblems } from '$lib/problems';
+	import { CodeComment, problems as srcProblems, AnswerOption } from '$lib/problems';
 
 	let problems = [...srcProblems];
 
@@ -25,8 +25,8 @@
 	let lines = ['System.out.println("Are you ready?")'];
 	let correctLines = ['System.out.println("Are you ready?");'];
 	let enableLineNumber = true;
-	let options = ['Yes!', 'Missing ;'];
-	let correctAnswer = 1;
+	let options = [new AnswerOption(false, 'Yes!'), new AnswerOption(true, 'Missing ;')];
+	shuffle(options);
 	let streak = 0;
 	let ansPicked = false;
 	let showOriginal = false;
@@ -34,6 +34,12 @@
 		0: new CodeComment('Most statements must end with a semicolon')
 	};
 </script>
+
+<svelte:head>
+	<title>
+		JPatterns
+	</title>
+</svelte:head>
 
 <header>
 	<h1>JPatterns</h1>
@@ -56,14 +62,14 @@
 		{#if !ansPicked || showOriginal}
 			{#each lines as line, i}
 				{#if ansPicked && comments[i]}
-					<tr>
-                        {#if enableLineNumber}
-						<td class="line-no"></td>
-                        {/if}
 						{#each comments[i].lines as _}
+						<tr>
+							{#if enableLineNumber}
+							<td class="line-no">&#8203;</td>
+							{/if}
 							<td>&#8203;</td>
+						</tr>
 						{/each}
-					</tr>
 				{/if}
 				<tr>
 					{#if enableLineNumber}
@@ -75,14 +81,14 @@
 		{:else}
 			{#each correctLines as line, i}
 				{#if comments[i]}
-					<tr>
-                        {#if enableLineNumber}
-						<td class="line-no"></td>
-                        {/if}
 						{#each comments[i].lines as commentLine}
+						<tr>
+							{#if enableLineNumber}
+							<td class="line-no">&#8203;</td>
+							{/if}
 							<td><span class="comment">// {commentLine}</span></td>
+						</tr>
 						{/each}
-					</tr>
 				{/if}
 				<tr>
 					{#if enableLineNumber}
@@ -94,24 +100,24 @@
 		{/if}
 	</table>
 	<ul>
-		{#each options as option, i}
+		{#each options as option}
 			{#if ansPicked}
-				{#if i == correctAnswer}
-					<button type="button" class="right-answer" disabled>{option}</button>
+				{#if option.correct}
+					<button type="button" class="right-answer" disabled>{option.text}</button>
 				{:else}
-					<button type="button" class="wrong-answer" disabled>{option}</button>
+					<button type="button" class="wrong-answer" disabled>{option.text}</button>
 				{/if}
 			{:else}
 				<button
 					type="button"
 					on:click={() => {
 						ansPicked = true;
-						if (i == correctAnswer) {
+						if (option.correct) {
 							streak += 1;
 						} else {
 							streak = 0;
 						}
-					}}>{option}</button
+					}}>{option.text}</button
 				>
 			{/if}
 		{/each}
@@ -130,7 +136,7 @@
 					lines = problem.lines;
 					correctLines = problem.correctLines;
 					options = problem.options;
-					correctAnswer = problem.correctAnswer;
+					shuffle(options);
 					comments = problem.comments;
 
 					ansPicked = false;
@@ -212,6 +218,7 @@
 
 	.line-no {
 		color: hsl(0, 0%, 60%);
+		width: 2rem;
 	}
 
 	ul {
