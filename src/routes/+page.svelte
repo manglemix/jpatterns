@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { CodeComment, problems as srcProblems, AnswerOption } from '$lib/problems';
+	import arrow from '$lib/arrow.png';
 
 	let problems = [...srcProblems];
 
@@ -33,6 +34,7 @@
 	let comments: Record<number, CodeComment> = {
 		0: new CodeComment('Most statements must end with a semicolon')
 	};
+	let showFaq = false;
 
 	function getIndent(line: string) {
 		let i = 0;
@@ -160,6 +162,61 @@
 	</section>
 </main>
 
+<footer>
+	<button style="display: flex;" type=button on:click={() => showFaq = !showFaq}>FAQ <img alt="Down arrow" src={arrow} width=2rem /></button>
+	{#if showFaq}
+	<ul>
+		<li>
+			<h2>
+				Who is this for?
+			</h2>
+			<p>
+				This webapp is for students learning Java or other related languages
+				who are trying to become faster coders. In assignments, you often have
+				a lot of time to arrive at the right answer or get help. In an exam, you
+				have to be careful with your time and your questions, and you do not have
+				an IDE to help you out. Training your brain to find red flags is one of the
+				easiest ways to get some points back.
+			</p>
+		</li>
+		<li>
+			<h2>
+				Privacy?
+			</h2>
+			<p>
+				No information ever leaves your browser. Currently, no cookies are stored as well.
+				Your performance is not recorded, and your usage is not tracked. Not only is this
+				safer for you, it also means running this webapp is free for me. All this needs
+				is Javascript.
+			</p>
+		</li>
+		<li>
+			<h2>
+				Code smells, red flags?
+			</h2>
+			<p>
+				If part of your code <em>smells</em>, it means that there is a greater
+				problem with your code than is immediately obvious. The vast majority of
+				these hint at logical errors instead of syntax errors, so an IDE most likely
+				would not help. Spotting these is not always easy and requires practice. A red
+				flag is usually a glaring problem that should be easy to see. Getting good at
+				catching these can lift you out of your beginner stage, and an IDE can be very
+				helpful here. As a beginner, identifying these problems can be very beneficial.
+			</p>
+		</li>
+		<li>
+			<h2>
+				Source code?
+			</h2>
+			<p>
+				This webapp was written with TypeScript and SvelteKit, and the repository is completely
+				public for anyone to contribute to. View it <a href="https://github.com/manglemix/jpatterns">here</a>.
+			</p>
+		</li>
+	</ul>
+	{/if}
+</footer>
+
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 
@@ -229,7 +286,7 @@
 		width: 2rem;
 	}
 
-	ul {
+	main > ul {
 		display: flex;
 		flex-direction: column;
 		gap: 0.2rem;
@@ -239,5 +296,35 @@
 
 	.comment {
 		color: hsl(0, 0%, 55%);
+	}
+
+	footer {
+		margin-top: 3rem;
+	}
+
+	ul {
+		list-style: none;
+	}
+
+	footer > button {
+		background-color: hsla(0, 0%, 0%, 0%);
+		font-size: 2rem;
+		font-weight: bolder;
+		border: none;
+		display: flex;
+		align-items: baseline;
+		gap: 0.5rem;
+		padding: 0;
+		margin-bottom: 1rem;
+	}
+
+	footer > button img {
+		width: 2rem;
+	}
+
+	footer > ul {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 	}
 </style>
