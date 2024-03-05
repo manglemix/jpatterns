@@ -1,4 +1,27 @@
 <script lang="ts">
+	import { CodeComment, problems as srcProblems } from '$lib/problems';
+
+	let problems = [...srcProblems];
+
+	function shuffle<T>(array: T[]) {
+		let currentIndex = array.length,
+			randomIndex;
+
+		// While there remain elements to shuffle.
+		while (currentIndex > 0) {
+			// Pick a remaining element.
+			randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex--;
+
+			// And swap it with the current element.
+			[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+		}
+
+		return array;
+	}
+
+	shuffle(problems);
+
 	let lines = ['System.out.println("Are you ready?")'];
 	let correctLines = ['System.out.println("Are you ready?");'];
 	let enableLineNumber = true;
@@ -7,6 +30,9 @@
 	let streak = 0;
 	let ansPicked = false;
 	let showOriginal = false;
+	let comments: Record<number, CodeComment> = {
+		0: new CodeComment('Most statements must end with a semicolon')
+	};
 </script>
 
 <header>
@@ -29,6 +55,16 @@
 	<table>
 		{#if !ansPicked || showOriginal}
 			{#each lines as line, i}
+				{#if ansPicked && comments[i]}
+					<tr>
+                        {#if enableLineNumber}
+						<td class="line-no"></td>
+                        {/if}
+						{#each comments[i].lines as _}
+							<td>&#8203;</td>
+						{/each}
+					</tr>
+				{/if}
 				<tr>
 					{#if enableLineNumber}
 						<td class="line-no">{i + 1}</td>
@@ -38,6 +74,16 @@
 			{/each}
 		{:else}
 			{#each correctLines as line, i}
+				{#if comments[i]}
+					<tr>
+                        {#if enableLineNumber}
+						<td class="line-no"></td>
+                        {/if}
+						{#each comments[i].lines as commentLine}
+							<td><span class="comment">// {commentLine}</span></td>
+						{/each}
+					</tr>
+				{/if}
 				<tr>
 					{#if enableLineNumber}
 						<td class="line-no">{i + 1}</td>
@@ -73,6 +119,20 @@
 			<button
 				id="continue-button"
 				on:click={() => {
+					let problem = problems.pop();
+					if (problem === undefined) {
+						problems = [...srcProblems];
+						shuffle(problems);
+						// A way of forgiving undefined
+						// The pop will never be undefined anyway
+						problem = problems.pop() ?? problems[0];
+					}
+					lines = problem.lines;
+					correctLines = problem.correctLines;
+					options = problem.options;
+					correctAnswer = problem.correctAnswer;
+					comments = problem.comments;
+
 					ansPicked = false;
 					showOriginal = false;
 				}}>Continue</button
@@ -160,5 +220,9 @@
 		gap: 0.2rem;
 		padding-bottom: 2rem;
 		border-bottom: 1px solid hsl(0, 0%, 15%);
+	}
+
+	.comment {
+		color: hsl(0, 0%, 55%);
 	}
 </style>
