@@ -232,6 +232,7 @@
 		padding: 0.7rem;
 		border-radius: 1rem;
 		text-align: left;
+		font-size: 1rem;
 	}
 
 	#continue-button {
@@ -250,6 +251,7 @@
 		background-color: hsl(0, 0%, 3%);
 		display: flex;
 		flex-direction: column;
+		font-size: min(16px, 2.5vw);
 	}
 
 	:global(body) {

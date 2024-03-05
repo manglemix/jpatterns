@@ -57,7 +57,7 @@ System.out.println(message);`,
 		[
 			new AnswerOption(true, 'Probably unneeded quotes'),
 			new AnswerOption(false, 'Invalid type'),
-			new AnswerOption(false, 'No error')
+			new AnswerOption(false, 'No issues')
 		],
 		{ 1: new CodeComment('This is probably what the coder meant to write') }
 	),
